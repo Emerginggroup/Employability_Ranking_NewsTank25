@@ -79,13 +79,77 @@ fig_scatter = px.scatter(
     color_continuous_scale="RdBu",
     width=900, height=600
 )
-
 # === Ajout des lignes de moyenne ===
 moyenne_employabilite = df_results_overview["% Employabilité (QF1)"].mean()
 moyenne_collaboration = df_results_overview["% Collaboration (QF2)"].mean()
 
 fig_scatter.add_vline(x=moyenne_employabilite, line_dash="dash", line_color="red", annotation_text="Moyenne Compétences")
 fig_scatter.add_hline(y=moyenne_collaboration, line_dash="dash", line_color="red", annotation_text="Moyenne Collaboration")
+
+# === Ajout des annotations pour les quadrants ===
+fig_scatter.add_annotation(
+    x=moyenne_employabilite - 5,  # Position ajustée pour le texte
+    y=moyenne_collaboration + 5,
+    text="🥉 Bronze (3ème place)<br>"
+         "🔴 Compétences<br>"
+         "🟢 Collaboration<br>"
+         "🔴 Réputation<br><br>"
+         "Établissements mal réputés avec des scores<br>"
+         "faibles en compétences enseignées<br>"
+         "mais une collaboration entreprise forte<br>",
+    showarrow=False,
+    font=dict(size=12, color="black"),
+    align="left",
+    bgcolor="rgba(255, 215, 0, 0.2)"  # Fond doré clair
+)
+
+fig_scatter.add_annotation(
+    x=moyenne_employabilite + 5,
+    y=moyenne_collaboration + 5,
+    text="🥇 Or (1ère place)<br>"
+         "🟢 Compétences<br>"
+         "🟢 Collaboration<br>"
+         "🟢 Réputation<br><br>"
+         "Établissements prestigieux avec un excellent<br>"
+         "équilibre entre compétences enseignées et<br>"
+         "collaboration avec les entreprises<br>",
+    showarrow=False,
+    font=dict(size=12, color="black"),
+    align="left",
+    bgcolor="rgba(255, 223, 0, 0.3)"  # Fond doré clair
+)
+
+fig_scatter.add_annotation(
+    x=moyenne_employabilite + 5,
+    y=moyenne_collaboration - 5,
+    text="🥈 Argent (2ème place)<br>"
+         "🟢 Compétences<br>"
+         "🔴 Collaboration<br>"
+         "🟢 Réputation<br><br>"
+         "Établissements réputés et très bons en<br>"
+         "compétences enseignées mais peu<br>"
+         "engagés avec les entreprises",
+    showarrow=False,
+    font=dict(size=12, color="black"),
+    align="left",
+    bgcolor="rgba(192, 192, 192, 0.3)"  # Fond argenté clair
+)
+
+fig_scatter.add_annotation(
+    x=moyenne_employabilite - 5,
+    y=moyenne_collaboration - 5,
+    text="🏅 Distinction (4ème place)<br>"
+         "🔴 Compétences<br>"
+         "🔴 Collaboration<br>"
+         "🟡 Réputation<br><br>"
+         "Établissements qui misent davantage sur<br>"
+         "leur réputation, mais qui sous-performent<br>"
+         "à la fois en compétences et en collaboration<br>",
+    showarrow=False,
+    font=dict(size=12, color="black"),
+    align="left",
+    bgcolor="rgba(255, 223, 186, 0.3)"  # Fond beige clair
+)
 
 # === Création de la Heatmap ===
 column_labels = {
