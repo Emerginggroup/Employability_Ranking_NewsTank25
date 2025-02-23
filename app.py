@@ -79,6 +79,62 @@ fig_scatter = px.scatter(
     color_continuous_scale="RdBu",
     width=900, height=600
 )
+# === Ajout des légendes des quadrants EN DEHORS du Scatter Plot ===
+st.markdown(
+    """
+    <style>
+        .quadrant-box {
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            width: 100%;
+            display: inline-block;
+            margin: 5px;
+        }
+        .bronze { background-color: rgba(30, 144, 255, 0.7); } /* 🥉 Bronze - Bleu Clair */
+        .or { background-color: rgba(50, 205, 50, 0.7); } /* 🥇 Or - Vert */
+        .distinction { background-color: rgba(255, 69, 0, 0.7); } /* 🏅 Distinction - Rouge */
+        .argent { background-color: rgba(255, 215, 0, 0.7); } /* 🥈 Argent - Jaune */
+    </style>
+
+    <div style="display: flex; justify-content: space-between;">
+        <div class="quadrant-box bronze">
+            🥉 <b>Bronze (3ème place)</b><br>
+            🔴 Compétences | 🟢 Collaboration | 🔴 Réputation<br><br>
+            Établissements mal réputés avec des scores faibles en compétences<br>
+            mais une collaboration entreprise forte.
+        </div>
+        
+        <div class="quadrant-box or">
+            🥇 <b>Or (1ère place)</b><br>
+            🟢 Compétences | 🟢 Collaboration | 🟢 Réputation<br><br>
+            Établissements prestigieux avec un excellent équilibre entre compétences<br>
+            enseignées et collaboration avec les entreprises.
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between;">
+        <div class="quadrant-box distinction">
+            🏅 <b>Distinction (4ème place)</b><br>
+            🔴 Compétences | 🔴 Collaboration | 🟡 Réputation<br><br>
+            Établissements misant sur leur réputation mais sous-performant<br>
+            en compétences et en collaboration.
+        </div>
+
+        <div class="quadrant-box argent">
+            🥈 <b>Argent (2ème place)</b><br>
+            🟢 Compétences | 🔴 Collaboration | 🟢 Réputation<br><br>
+            Établissements réputés et excellents en compétences<br>
+            mais peu engagés avec les entreprises.
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # === Ajout des lignes de moyenne ===
 moyenne_employabilite = df_results_overview["% Employabilité (QF1)"].mean()
