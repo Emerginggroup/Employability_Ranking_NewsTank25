@@ -143,9 +143,9 @@ df_display = df_display.rename(columns={
 # === Tri des établissements par "Score Final" ===
 df_display = df_display.sort_values(by="Score Final", ascending=True)
 
-# === Affichage du tableau des établissements ===
+# === Affichage du tableau des établissements sans indice ===
 st.subheader("🏅 Performances des Établissements")
-st.dataframe(df_display.reset_index(drop=True))
+st.dataframe(df_display.reset_index(drop=True), hide_index=True)
 
 # === Affichage du Scatter Plot et de la Heatmap en pleine largeur ===
 col1, col2 = st.columns([2, 1])
