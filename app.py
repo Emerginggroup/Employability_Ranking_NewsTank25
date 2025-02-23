@@ -79,11 +79,31 @@ fig_scatter = px.scatter(
     color_continuous_scale="RdBu",
     width=900, height=600
 )
-# === Ajout des légendes des quadrants EN DEHORS du Scatter Plot ===
+# === Affichage du Scatter Plot et des Quadrants ===
+col1, col2 = st.columns([2, 1])
+
+with col1:
+    st.subheader("📊 Visualisation des résultats")
+    st.plotly_chart(fig_scatter, use_container_width=True)
+
+with col2:
+    st.subheader("📊 Matrice de corrélation entre les variables")
+    st.plotly_chart(fig_heatmap, use_container_width=True)
+
+# === Ajout des légendes des quadrants sous le scatter plot ===
 st.markdown(
     """
     <style>
+        .quadrant-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
         .quadrant-box {
+            flex: 1;
+            min-width: 45%;
             padding: 15px;
             border-radius: 10px;
             box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
@@ -91,33 +111,32 @@ st.markdown(
             font-size: 14px;
             font-weight: bold;
             color: white;
-            width: 100%;
-            display: inline-block;
-            margin: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
-        .bronze { background-color: rgba(30, 144, 255, 0.7); } /* 🥉 Bronze - Bleu Clair */
-        .or { background-color: rgba(50, 205, 50, 0.7); } /* 🥇 Or - Vert */
-        .distinction { background-color: rgba(255, 69, 0, 0.7); } /* 🏅 Distinction - Rouge */
-        .argent { background-color: rgba(255, 215, 0, 0.7); } /* 🥈 Argent - Jaune */
+        .bronze { background-color: rgba(30, 144, 255, 0.8); } /* 🥉 Bronze - Bleu Clair */
+        .or { background-color: rgba(50, 205, 50, 0.8); } /* 🥇 Or - Vert */
+        .distinction { background-color: rgba(255, 69, 0, 0.8); } /* 🏅 Distinction - Rouge */
+        .argent { background-color: rgba(255, 215, 0, 0.8); } /* 🥈 Argent - Jaune */
     </style>
 
-    <div style="display: flex; justify-content: space-between;">
+    <div class="quadrant-container">
         <div class="quadrant-box bronze">
             🥉 <b>Bronze (3ème place)</b><br>
             🔴 Compétences | 🟢 Collaboration | 🔴 Réputation<br><br>
             Établissements mal réputés avec des scores faibles en compétences<br>
             mais une collaboration entreprise forte.
         </div>
-        
+
         <div class="quadrant-box or">
             🥇 <b>Or (1ère place)</b><br>
             🟢 Compétences | 🟢 Collaboration | 🟢 Réputation<br><br>
             Établissements prestigieux avec un excellent équilibre entre compétences<br>
             enseignées et collaboration avec les entreprises.
         </div>
-    </div>
 
-    <div style="display: flex; justify-content: space-between;">
         <div class="quadrant-box distinction">
             🏅 <b>Distinction (4ème place)</b><br>
             🔴 Compétences | 🔴 Collaboration | 🟡 Réputation<br><br>
