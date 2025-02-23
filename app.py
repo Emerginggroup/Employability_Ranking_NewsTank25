@@ -151,9 +151,9 @@ st.dataframe(df_display.reset_index(drop=True), hide_index=True)
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    st.subheader("📊 Visualisation des résultats")
+    st.subheader("Visualisation des résultats")
     st.plotly_chart(fig_scatter, use_container_width=True)
 
 with col2:
-    st.subheader("📊 Matrice de corrélation entre les variables")
+    st.subheader("Matrice de corrélation entre les variables")
     st.plotly_chart(fig_heatmap, use_container_width=True)
