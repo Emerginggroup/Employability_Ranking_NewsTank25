@@ -6,24 +6,50 @@ import numpy as np
 import requests
 from io import BytesIO
 
-# === Load Excel File from GitHub ===
+# === Configuration de la page pour affichage pleine largeur ===
+st.set_page_config(page_title="Classement Employabilité", layout="wide")
+
+# === Style CSS pour forcer l'affichage à 100% ===
+st.markdown(
+    """
+    <style>
+        .main .block-container {
+            max-width: 100% !important; /* ✅ Étend tout le contenu */
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+        .custom-box {
+            background-color: rgba(0, 123, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #003366;
+            width: 100%;
+            display: block;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# === Chargement du fichier Excel depuis GitHub ===
 github_url = "https://raw.githubusercontent.com/Emerginggroup/Employability_Ranking_NewsTank25/main/GEURS25_France%20Special%20Questions_240827.xlsx"
 
 try:
     response = requests.get(github_url)
-    response.raise_for_status()  # Raise an error if the request fails
-    excel_data = BytesIO(response.content)  # Convert the content into a file-like object
+    response.raise_for_status()
+    excel_data = BytesIO(response.content)
     xls = pd.ExcelFile(excel_data)
     df_results_overview = xls.parse("Results Overview")
 except Exception as e:
     st.error(f"❌ Erreur lors du chargement du fichier Excel : {e}")
     st.stop()
 
-# === Suppression des valeurs manquantes ===
+# === Nettoyage des données ===
 df_results_overview = df_results_overview.dropna(subset=["% Employabilité (QF1)", "% Collaboration (QF2)", "Brand \nIndex"])
-
-# === Calcul de la matrice de corrélation ===
-correlation_matrix = df_results_overview[["% Employabilité (QF1)", "% Collaboration (QF2)", "Brand \nIndex"]].corr()
 
 # === Remplacement des valeurs dans la colonne "Type" ===
 df_results_overview["Type"] = df_results_overview["Type"].replace({
@@ -31,10 +57,13 @@ df_results_overview["Type"] = df_results_overview["Type"].replace({
     "SCHOOL": "École"
 })
 
-# === Arrondir les colonnes concernées à 2 décimales ===
+# === Arrondir les valeurs à 2 décimales ===
 df_results_overview["% Employabilité (QF1)"] = df_results_overview["% Employabilité (QF1)"].round(2)
 df_results_overview["% Collaboration (QF2)"] = df_results_overview["% Collaboration (QF2)"].round(2)
 df_results_overview["Brand \nIndex"] = df_results_overview["Brand \nIndex"].round(2)
+
+# === Calcul de la matrice de corrélation ===
+correlation_matrix = df_results_overview[["% Employabilité (QF1)", "% Collaboration (QF2)", "Brand \nIndex"]].corr()
 
 # === Création du Scatter Plot ===
 fig_scatter = px.scatter(
@@ -47,7 +76,8 @@ fig_scatter = px.scatter(
     labels={"% Employabilité (QF1)": "Compétences Étudiants",
             "% Collaboration (QF2)": "Collaboration Entreprise",
             "Brand \nIndex": "Réputation"},
-    color_continuous_scale="RdBu"
+    color_continuous_scale="RdBu",
+    width=900, height=600
 )
 
 # === Ajout des lignes de moyenne ===
@@ -75,30 +105,15 @@ fig_heatmap = go.Figure(data=go.Heatmap(
 ))
 
 fig_heatmap.update_layout(
-    width=400, height=300,
+    width=500, height=400,
 )
 
 # === Interface Streamlit ===
-# === Titre Principal ===
 st.title("📊 Classement des Établissements Français")
 
-# === Sous-Titre Stylisé avec Fond Bleu Transparent et Bordures Arrondies ===
+# === Sous-Titre avec Fond Bleu Transparent ===
 st.markdown(
     """
-    <style>
-        .custom-box {
-            background-color: rgba(0, 123, 255, 0.1); /* ✅ Fond bleu transparent */
-            padding: 20px; /* ✅ Plus grand espace interne */
-            border-radius: 12px; /* ✅ Bords arrondis */
-            box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.2); /* ✅ Effet d’ombre */
-            text-align: left;
-            font-size: 18px;
-            font-weight: bold;
-            color: #003366; /* ✅ Bleu foncé pour contraste */
-            width: 100%;
-            display: block;
-        }
-    </style>
     <div class="custom-box">
         L'Employability Ranking met en avant les établissements selon leur capacité 
         à former des étudiants aux meilleures compétences et à collaborer efficacement avec les entreprises.
@@ -107,18 +122,18 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Barre latérale pour les filtres
+# === Barre latérale pour les filtres ===
 st.sidebar.header("Filtres")
 selected_university = st.sidebar.selectbox("Sélectionner un établissement", ["Tous"] + df_results_overview["University name in survey"].unique().tolist())
 
-# Filtrer les données (si un établissement est sélectionné)
+# Appliquer le filtre
 if selected_university != "Tous":
     df_results_overview = df_results_overview[df_results_overview["University name in survey"] == selected_university]
 
-# Sélectionner les colonnes spécifiques pour affichage
+# === Sélection des colonnes pour affichage ===
 df_display = df_results_overview[["University name in survey", "Type", "French Employability Ranking (50/50)", "Rang Employabilité (QF1)", "Rang Collaboration (QF2)"]]
 
-# Renommer les colonnes
+# === Renommage des colonnes ===
 df_display = df_display.rename(columns={
     "Rang Employabilité (QF1)": "Compétences Étudiants",
     "Rang Collaboration (QF2)": "Collaboration Entreprise",
@@ -126,22 +141,21 @@ df_display = df_display.rename(columns={
     "University name in survey": "Établissement"
 })
 
-# Appliquer un tri croissant basé sur "Score Final"
+# === Tri des établissements par "Score Final" ===
 df_display = df_display.sort_values(by="Score Final", ascending=True)
 
-# Affichage des données triées par Score Final sans l'indice
+# === Affichage du tableau des établissements ===
 st.subheader("🏅 Performances des Établissements")
-st.dataframe(df_display.reset_index(drop=True), hide_index=True)
+st.dataframe(df_display.reset_index(drop=True))
 
-
-
-# Affichage du Scatter Plot et de la Heatmap
+# === Affichage du Scatter Plot et de la Heatmap en pleine largeur ===
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    st.subheader("Visualisation des résultats")
+    st.subheader("📊 Visualisation des résultats")
     st.plotly_chart(fig_scatter, use_container_width=True)
 
 with col2:
-    st.subheader("Matrice de corrélation entre les variables")
+    st.subheader("📊 Matrice de corrélation entre les variables")
     st.plotly_chart(fig_heatmap, use_container_width=True)
+
