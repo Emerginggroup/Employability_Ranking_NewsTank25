@@ -79,17 +79,6 @@ fig_scatter = px.scatter(
     color_continuous_scale="RdBu",
     width=900, height=600
 )
-# === Affichage du Scatter Plot et des Quadrants ===
-col1, col2 = st.columns([2, 1])
-
-with col1:
-    st.subheader("📊 Visualisation des résultats")
-    st.plotly_chart(fig_scatter, use_container_width=True)
-
-with col2:
-    st.subheader("📊 Matrice de corrélation entre les variables")
-    st.plotly_chart(fig_heatmap, use_container_width=True)
-
 
 # === Ajout des lignes de moyenne ===
 moyenne_employabilite = df_results_overview["% Employabilité (QF1)"].mean()
@@ -169,4 +158,3 @@ with col1:
 with col2:
     st.subheader("📊 Matrice de corrélation entre les variables")
     st.plotly_chart(fig_heatmap, use_container_width=True)
-
