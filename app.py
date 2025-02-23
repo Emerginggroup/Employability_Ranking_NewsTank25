@@ -158,52 +158,59 @@ with col2:
     st.subheader("📊 Matrice de corrélation entre les variables")
     st.plotly_chart(fig_heatmap, use_container_width=True)
 
-# === Ajout des explications des quadrants à côté du scatter plot ===
-col1, col2 = st.columns([2, 1])
+# === Disposition en grille pour entourer le scatter plot ===
+top_left, top_center, top_right = st.columns([1, 3, 1])  # 3 colonnes pour le haut
+bottom_left, bottom_center, bottom_right = st.columns([1, 3, 1])  # 3 colonnes pour le bas
 
-with col1:
-    st.write("")  # Espace vide pour garder l'alignement
-
-with col2:
-    st.subheader("🗂️ Légende des Quadrants")
-    
+# === Légendes en haut du scatter plot ===
+with top_left:
     st.markdown("""
-    <div style="background-color: rgba(255, 215, 0, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px;">
-        <b>🥇 Or (1ère place)</b><br>
-        ✅ Compétences élevées<br>
-        ✅ Collaboration forte<br>
-        ✅ Bonne réputation<br>
-        <i>Établissements prestigieux offrant un excellent équilibre.</i>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div style="background-color: rgba(192, 192, 192, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px;">
-        <b>🥈 Argent (2ème place)</b><br>
-        ✅ Compétences élevées<br>
-        ❌ Collaboration faible<br>
-        ✅ Bonne réputation<br>
-        <i>Établissements réputés mais peu engagés avec les entreprises.</i>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div style="background-color: rgba(205, 127, 50, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+    <div style="background-color: rgba(205, 127, 50, 0.1); padding: 10px; border-radius: 8px; text-align: center;">
         <b>🥉 Bronze (3ème place)</b><br>
-        ❌ Compétences faibles<br>
-        ✅ Collaboration forte<br>
-        ❌ Réputation faible<br>
-        <i>Établissements collaborant bien avec les entreprises, mais avec une réputation et des compétences plus faibles.</i>
+        🔴 Compétences<br>
+        🟢 Collaboration<br>
+        🔴 Réputation<br>
+        <i>Faibles compétences mais forte collaboration.</i>
     </div>
     """, unsafe_allow_html=True)
 
+with top_center:
+    st.subheader("📊 Visualisation des résultats")  # Titre au-dessus du scatter plot
+
+with top_right:
     st.markdown("""
-    <div style="background-color: rgba(255, 223, 186, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px;">
-        <b>🏅 Distinction (4ème place)</b><br>
-        ❌ Compétences faibles<br>
-        ❌ Collaboration faible<br>
-        ⚠️ Réputation moyenne<br>
-        <i>Établissements misant sur leur réputation, mais sous-performant sur les autres critères.</i>
+    <div style="background-color: rgba(255, 215, 0, 0.1); padding: 10px; border-radius: 8px; text-align: center;">
+        <b>🥇 Or (1ère place)</b><br>
+        🟢 Compétences<br>
+        🟢 Collaboration<br>
+        🟢 Réputation<br>
+        <i>Établissements prestigieux et équilibrés.</i>
     </div>
     """, unsafe_allow_html=True)
 
+# === Affichage du scatter plot au centre ===
+with bottom_center:
+    st.plotly_chart(fig_scatter, use_container_width=True)
+
+# === Légendes en bas du scatter plot ===
+with bottom_left:
+    st.markdown("""
+    <div style="background-color: rgba(255, 223, 186, 0.1); padding: 10px; border-radius: 8px; text-align: center;">
+        <b>🏅 Distinction (4ème place)</b><br>
+        🔴 Compétences<br>
+        🔴 Collaboration<br>
+        🟡 Réputation<br>
+        <i>Bonne réputation, mais faibles performances.</i>
+    </div>
+    """, unsafe_allow_html=True)
+
+with bottom_right:
+    st.markdown("""
+    <div style="background-color: rgba(192, 192, 192, 0.1); padding: 10px; border-radius: 8px; text-align: center;">
+        <b>🥈 Argent (2ème place)</b><br>
+        🟢 Compétences<br>
+        🔴 Collaboration<br>
+        🟢 Réputation<br>
+        <i>Bonne réputation mais faible collaboration.</i>
+    </div>
+    """, unsafe_allow_html=True)
