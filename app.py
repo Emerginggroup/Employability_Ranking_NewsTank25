@@ -79,6 +79,62 @@ fig_scatter = px.scatter(
     color_continuous_scale="RdBu",
     width=900, height=600
 )
+# === Ajout des annotations EN DEHORS du graphique ===
+annotations = [
+    dict(
+        x=moyenne_employabilite - 5, y=moyenne_collaboration + 5,  
+        text="🥉 Bronze (3ème place)<br>"
+             "🔴 Compétences<br>"
+             "🟢 Collaboration<br>"
+             "🔴 Réputation<br><br>"
+             "Établissements mal réputés avec des scores<br>"
+             "faibles en compétences enseignées<br>"
+             "mais une collaboration entreprise forte<br>",
+        showarrow=False, bgcolor="lightblue", opacity=0.7, font=dict(size=11),
+        xanchor="right", yanchor="top", align="left"
+    ),
+    
+    dict(
+        x=moyenne_employabilite + 5, y=moyenne_collaboration + 5,  
+        text="🥇 Or (1ère place)<br>"
+             "🟢 Compétences<br>"
+             "🟢 Collaboration<br>"
+             "🟢 Réputation<br><br>"
+             "Établissements prestigieux avec un excellent<br>"
+             "équilibre entre compétences enseignées et<br>"
+             "collaboration avec les entreprises<br>",
+        showarrow=False, bgcolor="lightgreen", opacity=0.7, font=dict(size=11),
+        xanchor="left", yanchor="top", align="right"
+    ),
+    
+    dict(
+        x=moyenne_employabilite - 5, y=moyenne_collaboration - 5,  
+        text="🏅 Distinction (4ème place)<br>"
+             "🔴 Compétences<br>"
+             "🔴 Collaboration<br>"
+             "🟡 Réputation<br><br>"
+             "Établissements qui misent davantage sur<br>"
+             "leur réputation, mais qui sous-performent<br>"
+             "à la fois en compétences et en collaboration<br>",
+        showarrow=False, bgcolor="lightcoral", opacity=0.7, font=dict(size=11),
+        xanchor="right", yanchor="bottom", align="left"
+    ),
+    
+    dict(
+        x=moyenne_employabilite + 5, y=moyenne_collaboration - 5,  
+        text="🥈 Argent (2ème place)<br>"
+             "🟢 Compétences<br>"
+             "🔴 Collaboration<br>"
+             "🟢 Réputation<br><br>"
+             "Établissements réputés et très bons en<br>"
+             "compétences enseignées mais peu<br>"
+             "engagés avec les entreprises",
+        showarrow=False, bgcolor="lightyellow", opacity=0.7, font=dict(size=11),
+        xanchor="left", yanchor="bottom", align="right"
+    ),
+]
+
+fig_scatter.update_layout(annotations=annotations)
 
 # === Ajout des lignes de moyenne ===
 moyenne_employabilite = df_results_overview["% Employabilité (QF1)"].mean()
